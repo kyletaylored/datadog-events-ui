@@ -65,17 +65,13 @@ A modern, client-side interface for managing Datadog Events. This tool allows yo
 
 ### GitHub Pages
 
-This project is configured for automatic deployment to GitHub Pages.
+This project is configured for automatic deployment to GitHub Pages via GitHub Actions.
 
-1.  **Build**:
-    ```bash
-    npm run build
-    ```
+1.  **Push to Main**:
+    Any push to the `main` branch will trigger the deployment workflow.
 
-2.  **Deploy**:
-    ```bash
-    npm run deploy
-    ```
+2.  **Verify Deployment**:
+    Check the "Actions" tab in your GitHub repository to see the deployment status. The site will be available at `https://<your-username>.github.io/datadog-events-ui/`.
 
 ### Manual Build
 
