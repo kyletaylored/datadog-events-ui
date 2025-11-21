@@ -10,9 +10,9 @@ export const SITES = [
     { value: 'ddog-gov.com', label: 'US1-FED (ddog-gov.com)' },
 ];
 
-const getBaseUrl = (site, type = 'api') => {
-    // Use proxy in development to avoid CORS
-    if (import.meta.env.DEV) {
+const getBaseUrl = (site, type = 'api', skipLocalProxy = false) => {
+    // Use proxy in development to avoid CORS, unless we are using a custom proxy
+    if (import.meta.env.DEV && !skipLocalProxy) {
         return `/proxy/${site}/${type}/api/v2/events`;
     }
 
@@ -79,7 +79,12 @@ api.interceptors.response.use(
                 errorMessage = `${status} ${error.response.statusText || 'Error'}`;
             }
         } else if (error.request) {
-            errorMessage = "Network Error: No response received from server. Check CORS or network connection.";
+            errorMessage = "Network Error: No response received. ";
+            if (!import.meta.env.DEV) {
+                errorMessage += "This is likely a CORS issue. The Datadog API blocks direct browser requests. You must use a proxy or run locally.";
+            } else {
+                errorMessage += "Check your network connection or CORS settings.";
+            }
         }
 
         if (id) {
@@ -109,8 +114,15 @@ api.interceptors.response.use(
 );
 
 export const createEvent = async (config, eventData) => {
-    const { apiKey, appKey, site } = config;
-    const url = getBaseUrl(site, 'intake');
+    const { apiKey, appKey, site, proxyUrl } = config;
+    let url = getBaseUrl(site, 'intake', !!proxyUrl);
+
+    // Use custom proxy if configured
+    if (proxyUrl) {
+        // Append target URL as query param
+        const targetUrl = encodeURIComponent(url);
+        url = `${proxyUrl}?url=${targetUrl}`;
+    }
 
     const response = await api.post(url, { data: eventData }, {
         headers: {
@@ -123,8 +135,14 @@ export const createEvent = async (config, eventData) => {
 };
 
 export const listEvents = async (config, params = {}) => {
-    const { apiKey, appKey, site } = config;
-    const url = getBaseUrl(site, 'api');
+    const { apiKey, appKey, site, proxyUrl } = config;
+    let url = getBaseUrl(site, 'api', !!proxyUrl);
+
+    // Use custom proxy if configured
+    if (proxyUrl) {
+        const targetUrl = encodeURIComponent(url);
+        url = `${proxyUrl}?url=${targetUrl}`;
+    }
 
     const response = await api.get(url, {
         headers: {
@@ -138,8 +156,7 @@ export const listEvents = async (config, params = {}) => {
 };
 
 export const getEvent = async (config, eventId) => {
-    const { apiKey, appKey, site } = config;
-    const url = `${getBaseUrl(site, 'api')}/${eventId}`;
+    const { apiKey, appKey, site, proxyUrl } = config;
 
     const response = await api.get(url, {
         headers: {

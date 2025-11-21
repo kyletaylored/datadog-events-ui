@@ -6,6 +6,7 @@ import { IconActivity, IconArrowRight, IconServer, IconUpload, IconDownload, Ico
 export function DebugPanel() {
     const latestRequest = useRequestStore((state) => state.requests[0]);
     const [activeTab, setActiveTab] = useState('request');
+    const [headersOpen, setHeadersOpen] = useState(false);
 
     if (!latestRequest) {
         return (
@@ -48,8 +49,6 @@ export function DebugPanel() {
         }
         return url;
     };
-
-    const [headersOpen, setHeadersOpen] = useState(false);
 
     const renderHeaders = (headers) => {
         if (!headers) return <Text c="dimmed" size="sm">No headers recorded</Text>;
@@ -139,7 +138,7 @@ export function DebugPanel() {
                             <Box>
                                 <Text size="xs" fw={700} c="dimmed" tt="uppercase" mb="xs">Body</Text>
                                 {latestRequest.body ? (
-                                    <ScrollArea.Autosize maxHeight={300}>
+                                    <ScrollArea.Autosize maxheight={300}>
                                         <Code block>{JSON.stringify(latestRequest.body, null, 2)}</Code>
                                     </ScrollArea.Autosize>
                                 ) : (
@@ -175,7 +174,7 @@ export function DebugPanel() {
                                 {latestRequest.status === 'pending' ? (
                                     <Text c="dimmed" fs="italic">Waiting for response...</Text>
                                 ) : latestRequest.responseBody ? (
-                                    <ScrollArea.Autosize maxHeight={400}>
+                                    <ScrollArea.Autosize maxheight={400}>
                                         <Code block color={latestRequest.error ? 'red' : 'blue'}>
                                             {typeof latestRequest.responseBody === 'object'
                                                 ? JSON.stringify(latestRequest.responseBody, null, 2)
