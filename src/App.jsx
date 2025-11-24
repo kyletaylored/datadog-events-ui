@@ -15,7 +15,7 @@ import { WelcomeModal } from './components/WelcomeModal';
 function App() {
   const [config, setConfig] = useState(() => {
     const saved = localStorage.getItem('dd_config');
-    return saved ? JSON.parse(saved) : { apiKey: '', appKey: '', site: 'datadoghq.com', proxyUrl: 'https://dev-datadog.pantheonsite.io/event-proxy.php' };
+    return saved ? JSON.parse(saved) : { apiKey: '', appKey: '', site: 'datadoghq.com', proxyUrl: 'https://dd-events.kyletaylored.workers.dev/' };
   });
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isInspectorOpen, setIsInspectorOpen] = useState(false);

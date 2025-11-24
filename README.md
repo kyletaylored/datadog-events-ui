@@ -61,6 +61,26 @@ A modern, client-side interface for managing Datadog Events. This tool allows yo
 
 > **Note**: Keys are stored in your browser's `localStorage`. You can clear them at any time using the "Clear Data" button in the settings panel.
 
+## CORS & Proxy Setup (Required for GitHub Pages)
+
+The Datadog API does not support direct browser requests (CORS) when using API keys. To use this application on GitHub Pages, you must deploy a simple proxy.
+
+### Option 1: Cloudflare Worker (Recommended - Free)
+
+1.  **Sign up/Login** to [Cloudflare Workers](https://workers.cloudflare.com/).
+2.  **Create a Service**: Click "Create a Service" -> "HTTP Router".
+3.  **Copy Code**: Copy the contents of `worker.js` from this repository.
+4.  **Edit Worker**: In the Cloudflare dashboard, click "Quick Edit" and paste the code.
+5.  **Save and Deploy**: Click "Save and Deploy".
+6.  **Configure App**:
+    *   Copy your Worker URL (e.g., `https://your-worker.subdomain.workers.dev`).
+    *   Open the Datadog Events UI Settings.
+    *   Paste the URL into the **Proxy URL** field.
+
+### Option 2: Run Locally
+
+If you run the application locally using `npm run dev`, it uses a built-in Vite proxy, so no external proxy is needed.
+
 ## Deployment
 
 ### GitHub Pages
