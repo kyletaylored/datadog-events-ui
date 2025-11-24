@@ -34,14 +34,6 @@ export function ConfigPanel({ config, onConfigChange, opened, close }) {
                         onChange={(e) => handleChange('appKey', e.target.value)}
                     />
 
-                    <TextInput
-                        label="Proxy URL (Optional)"
-                        placeholder="https://your-site.com/event-proxy.php"
-                        description="Required for GitHub Pages deployment to bypass CORS."
-                        value={config.proxyUrl || ''}
-                        onChange={(e) => handleChange('proxyUrl', e.target.value)}
-                    />
-
                     <Button type="submit" fullWidth mt="md">
                         Done
                     </Button>
